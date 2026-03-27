@@ -1,6 +1,7 @@
 package services;
 
 import base.LoginAPI;
+import io.restassured.filter.log.LogDetail;
 import io.restassured.response.Response;
 import models.Booking;
 
@@ -21,5 +22,20 @@ public class BookingService extends LoginAPI {
                 .spec(LoginAPI.getLoginReqSpec())
                 .when()
                 .get("/booking/" + id);
+    }
+
+    public static Response updateBooking(int id, Booking booking) {
+        return given()
+                .spec(LoginAPI.getUpdateReqSpec())
+                .body(booking)
+                .when()
+                .put("/booking/" + id);
+    }
+
+    public static Response deleteBooking(int id) {
+        return given()
+                .spec(LoginAPI.getUpdateReqSpec())
+                .when()
+                .delete("/booking/" + id);
     }
 }

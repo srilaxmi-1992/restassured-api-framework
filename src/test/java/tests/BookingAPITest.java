@@ -93,6 +93,67 @@ public class BookingAPITest extends LoginAPI {
 
     }
 
+    @Test(description = "Valid update with all fields", priority = 4)
+    public void validateUpdateBookingIdDetails() {
+        BookingDates dates = new BookingDates("2026-05-01", "2026-05-15");
+        Booking booking = new Booking(
+                "John",
+                "Deo",
+                560,
+                true,
+                dates,
+                "Breakfast"
+        );
+
+        Response createResponse = BookingService.createBooking(booking);
+        System.out.println("Create Booking API Response -> "+createResponse.asString());
+        int bookingId = createResponse.jsonPath().getInt("bookingid");
+        Booking updateBooking = new Booking(
+                "Mike",
+                "Evans",
+                770,
+                true,
+                dates,
+                "Breakfast"
+        );
+
+        // Step 2: Update booking
+        Response updateResponse = BookingService.updateBooking(bookingId, updateBooking);
+        System.out.println("Update Booking API Response -> "+updateResponse.asString());
+
+        // Step 3: Validations
+        Assert.assertEquals(updateResponse.statusCode(), 200);
+        Assert.assertNotNull(updateResponse.jsonPath().getString("firstname"));
+        // Validate all details later using testdata file
+
+    }
+
+    @Test(description = "Valid Delete booking", priority = 5)
+    public void validateDeleteBookingIdDetails() {
+        BookingDates dates = new BookingDates("2026-05-01", "2026-05-15");
+        Booking booking = new Booking(
+                "James",
+                "Brown",
+                220,
+                true,
+                dates,
+                "Breakfast"
+        );
+
+        Response createResponse = BookingService.createBooking(booking);
+        System.out.println("Create Booking API Response -> "+createResponse.body().asString());
+        int bookingId = createResponse.jsonPath().getInt("bookingid");
+
+        // Step 2: delete booking
+        Response deleteResponse = BookingService.deleteBooking(bookingId);
+        System.out.println("Delete Booking API Response -> "+deleteResponse.asString());
+
+        // Step 3: Validations
+        Assert.assertEquals(deleteResponse.statusCode(), 201);
+
+
+    }
+
     @AfterMethod
     public void cleanup() {
         TokenManager.clearToken();

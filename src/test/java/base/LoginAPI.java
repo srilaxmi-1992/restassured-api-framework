@@ -42,4 +42,12 @@ public class LoginAPI extends BaseAPI {
                 .build();
     }
 
+    public static RequestSpecification getUpdateReqSpec() {
+        return new RequestSpecBuilder()
+                .addRequestSpecification(authReqSpec)
+                .addHeader("Cookie", "token=" + TokenManager.getToken())
+                .setContentType(ContentType.JSON)
+                .build();
+    }
+
 }
