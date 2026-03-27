@@ -1,14 +1,14 @@
 package services;
 
 import base.LoginAPI;
-import groovy.util.logging.Log;
 import io.restassured.response.Response;
+import models.Booking;
 
 import static io.restassured.RestAssured.given;
 
 public class BookingService extends LoginAPI {
 
-    public static Response createBooking(String payload) {
+    public static Response createBooking(Booking payload) {
         return given()
                 .spec(LoginAPI.getLoginReqSpec())
                 .body(payload)
@@ -20,6 +20,6 @@ public class BookingService extends LoginAPI {
         return given()
                 .spec(LoginAPI.getLoginReqSpec())
                 .when()
-                .get("/booking/" + id + "");
+                .get("/booking/" + id);
     }
 }

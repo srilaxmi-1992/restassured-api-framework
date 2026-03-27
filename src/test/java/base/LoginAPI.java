@@ -5,6 +5,7 @@ import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import models.Login;
 import utils.TokenManager;
 
 import static io.restassured.RestAssured.given;
@@ -15,12 +16,10 @@ public class LoginAPI extends BaseAPI {
 
     public static String generateToken() {
 
+        Login login = new Login("admin", "password123");
         Response response = given()
                 .spec(authReqSpec)
-                .body("{\n" +
-                        "    \"username\" : \"admin\",\n" +
-                        "    \"password\" : \"password123\"\n" +
-                        "}")
+                .body(login)
                 .when()
                 .post("/auth")
                 .then()
