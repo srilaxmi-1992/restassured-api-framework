@@ -1,0 +1,109 @@
+{
+  "TC_001": {
+    "input": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": 150,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-04-01",
+        "checkout": "2026-04-05"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expected": {
+      "statusCode": 200,
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": 150,
+      "depositpaid": true
+    }
+  },
+
+  "TC_002": {
+    "description": "Create booking with missing firstname - expect 500",
+    "endpoint": "/booking",
+    "method": "POST",
+    "input": {
+      "lastname": "Doe",
+      "totalprice": 150,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-04-01",
+        "checkout": "2026-04-05"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expected": {
+      "statusCode": 500
+    }
+  },
+
+  "TC_003": {
+    "input": {
+      "firstname": "James",
+      "lastname": "Bond",
+      "totalprice": 250,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-04-01",
+        "checkout": "2026-04-05"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expected": {
+      "statusCode": 200,
+      "firstname": "James",
+      "lastname": "Bond",
+      "totalprice": 250
+    }
+  },
+
+  "TC_004": {
+    "input": {
+      "firstname": "John",
+      "lastname": "Deo",
+      "totalprice": 560,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-05-01",
+        "checkout": "2026-05-15"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "updatedInput": {
+      "firstname": "Mike",
+      "lastname": "Evans",
+      "totalprice": 770,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-05-01",
+        "checkout": "2026-05-15"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expected": {
+      "statusCode": 200,
+      "firstname": "Mike",
+      "lastname": "Evans",
+      "totalprice": 770
+    }
+  },
+
+  "TC_005": {
+    "input": {
+      "firstname": "James",
+      "lastname": "Brown",
+      "totalprice": 220,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-05-01",
+        "checkout": "2026-05-15"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expected": {
+      "statusCode": 201
+    }
+  }
+}
