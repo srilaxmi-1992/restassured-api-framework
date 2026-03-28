@@ -16,7 +16,7 @@ public class BaseAPI {
     public static RequestSpecification authReqSpec;
     public static ResponseSpecification responseSpec;
 
-    @BeforeSuite
+    @BeforeSuite(alwaysRun = true)
     public void setup() throws IOException {
         String baseUrl = ConfigReader.getConfigProps().getProperty("base.url");
         authReqSpec = new RequestSpecBuilder()

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="Rest API Automation Framework Full Suite" verbose="1" parallel="false">
+<suite name="Rest API Automation Framework Smoke Suite" verbose="1" parallel="false">
     <listeners>
         <listener class-name="listeners.TestListener"/>
     </listeners>
@@ -9,7 +9,6 @@
         <groups>
             <run>
                 <include name="smoke"></include>
-                <include name="regression"></include>
             </run>
         </groups>
         <classes>
