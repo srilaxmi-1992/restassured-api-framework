@@ -10,12 +10,11 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 import services.BookingService;
 import utils.TestDataLoader;
 import utils.TokenManager;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -47,13 +46,14 @@ public class BookingAPITest extends LoginAPI {
     public void validateSuccessfulBookingCreation(Booking booking, JsonNode expected) throws Exception {
 
         Response createResponse = BookingService.createBooking(booking);
-        // validations
-        Assert.assertEquals(createResponse.statusCode(), expected.get("statusCode").asInt());
         JsonPath jsonPath = new JsonPath(createResponse.asString());
-        Assert.assertNotNull(jsonPath.getInt("bookingid"));
-        // Validate all details later using testdata file
-        Assert.assertEquals(jsonPath.getString("booking.firstname"),
+        // validations
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(createResponse.statusCode(), expected.get("statusCode").asInt());
+        softAssert.assertNotNull(jsonPath.getInt("bookingid"));
+        softAssert.assertEquals(jsonPath.getString("booking.firstname"),
                 expected.get("firstname").asText());
+        softAssert.assertAll();
 
     }
 
@@ -83,10 +83,12 @@ public class BookingAPITest extends LoginAPI {
 
         // Step 3: Validations
         JsonNode expected = TestDataLoader.getExpected("TC_003");
-        Assert.assertEquals(getResponse.statusCode(), expected.get("statusCode").asInt());
-        Assert.assertNotNull(getResponse.jsonPath().getString("firstname"));
-        Assert.assertEquals(getResponse.jsonPath().getString("firstname"), expected.get("firstname").asText());
-        Assert.assertEquals(getResponse.jsonPath().getString("lastname"), expected.get("lastname").asText());
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(getResponse.statusCode(), expected.get("statusCode").asInt());
+        softAssert.assertNotNull(getResponse.jsonPath().getString("firstname"));
+        softAssert.assertEquals(getResponse.jsonPath().getString("firstname"), expected.get("firstname").asText());
+        softAssert.assertEquals(getResponse.jsonPath().getString("lastname"), expected.get("lastname").asText());
+        softAssert.assertAll();
 
     }
 
@@ -105,8 +107,10 @@ public class BookingAPITest extends LoginAPI {
 
         // Step 3: Validations
         JsonNode expected = TestDataLoader.getExpected("TC_004");
-        Assert.assertEquals(updateResponse.statusCode(), expected.get("statusCode").asInt());
-        Assert.assertEquals(updateResponse.jsonPath().getString("firstname"), expected.get("firstname").asText());
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(updateResponse.statusCode(), expected.get("statusCode").asInt());
+        softAssert.assertEquals(updateResponse.jsonPath().getString("firstname"), expected.get("firstname").asText());
+        softAssert.assertAll();
 
     }
 

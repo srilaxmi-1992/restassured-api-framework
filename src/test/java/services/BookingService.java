@@ -1,7 +1,6 @@
 package services;
 
 import base.LoginAPI;
-import io.restassured.filter.log.LogDetail;
 import io.restassured.response.Response;
 import models.Booking;
 
