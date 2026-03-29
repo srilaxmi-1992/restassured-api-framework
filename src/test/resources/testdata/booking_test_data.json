@@ -1,23 +1,63 @@
 {
   "TC_001": {
-    "input": {
-      "firstname": "John",
-      "lastname": "Doe",
-      "totalprice": 150,
-      "depositpaid": true,
-      "bookingdates": {
-        "checkin": "2026-04-01",
-        "checkout": "2026-04-05"
+    "input": [
+      {
+        "firstname": "Liam",
+        "lastname": "Anderson",
+        "totalprice": 210,
+        "depositpaid": true,
+        "bookingdates": {
+          "checkin": "2026-04-10",
+          "checkout": "2026-04-14"
+        },
+        "additionalneeds": "Breakfast"
       },
-      "additionalneeds": "Breakfast"
-    },
-    "expected": {
-      "statusCode": 200,
-      "firstname": "John",
-      "lastname": "Doe",
-      "totalprice": 150,
-      "depositpaid": true
-    }
+      {
+        "firstname": "Emma",
+        "lastname": "Taylor",
+        "totalprice": 185,
+        "depositpaid": false,
+        "bookingdates": {
+          "checkin": "2026-05-02",
+          "checkout": "2026-05-06"
+        },
+        "additionalneeds": "Dinner"
+      },
+      {
+        "firstname": "Noah",
+        "lastname": "Thomas",
+        "totalprice": 320,
+        "depositpaid": true,
+        "bookingdates": {
+          "checkin": "2026-06-15",
+          "checkout": "2026-06-20"
+        },
+        "additionalneeds": "Airport Pickup"
+      }
+    ],
+    "expected": [
+      {
+        "statusCode": 200,
+        "firstname": "Liam",
+        "lastname": "Anderson",
+        "totalprice": 210,
+        "depositpaid": true
+      },
+      {
+        "statusCode": 200,
+        "firstname": "Emma",
+        "lastname": "Taylor",
+        "totalprice": 185,
+        "depositpaid": false
+      },
+      {
+        "statusCode": 200,
+        "firstname": "Noah",
+        "lastname": "Thomas",
+        "totalprice": 320,
+        "depositpaid": true
+      }
+    ]
   },
 
   "TC_002": {

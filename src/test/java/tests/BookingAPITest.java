@@ -8,10 +8,15 @@ import models.Booking;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import services.BookingService;
 import utils.TestDataLoader;
 import utils.TokenManager;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
@@ -22,14 +27,27 @@ public class BookingAPITest extends LoginAPI {
         LoginAPI.generateToken(); // token for current thread
     }
 
-    @Test(description = "Create a booking with valid data", priority = 1, groups = {"smoke"})
-    public void validateSuccessfulBookingCreation() throws Exception {
+    @DataProvider(name = "getBookings")
+    public Object[][] getTestData() throws Exception {
 
-        Booking booking = TestDataLoader.getInput("TC_001");
+        List<Booking> bookings = TestDataLoader.getDataDrivenInput("TC_001");
+        List<JsonNode> expected = TestDataLoader.getDataDrivenExpected("TC_001");
+
+        // columns fixed, passing 2 params Booking and Expected jsonNode
+        // Rows based on How many times - how many bookings passing from testdata json
+        Object[][] data = new Object[bookings.size()][2];
+        for (int i = 0; i < bookings.size(); i++) {
+            data[i][0] = bookings.get(i);
+            data[i][1] = expected.get(i);
+        }
+        return data;
+    }
+
+    @Test(description = "Create a booking with valid data", priority = 1, groups = {"smoke"}, dataProvider = "getBookings")
+    public void validateSuccessfulBookingCreation(Booking booking, JsonNode expected) throws Exception {
+
         Response createResponse = BookingService.createBooking(booking);
         // validations
-        JsonNode expected = TestDataLoader.getExpected("TC_001");
-
         Assert.assertEquals(createResponse.statusCode(), expected.get("statusCode").asInt());
         JsonPath jsonPath = new JsonPath(createResponse.asString());
         Assert.assertNotNull(jsonPath.getInt("bookingid"));
