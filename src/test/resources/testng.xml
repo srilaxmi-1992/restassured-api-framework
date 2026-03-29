@@ -3,8 +3,9 @@
 <suite name="Rest API Automation Framework Full Suite" verbose="1" parallel="false">
     <listeners>
         <listener class-name="listeners.TestListener"/>
+        <listener class-name="listeners.RetryListener"/>
     </listeners>
-    <!-- Run all Groups (optional) -->
+    <!-- Run all Groups-->
     <test name="APITests">
         <groups>
             <run>
