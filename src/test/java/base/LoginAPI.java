@@ -6,11 +6,15 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import models.Login;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import utils.TokenManager;
 
 import static io.restassured.RestAssured.given;
 
 public class LoginAPI extends BaseAPI {
+
+    private static final Logger logger = LogManager.getLogger(LoginAPI.class);
 
     public static void generateToken() {
 
@@ -26,7 +30,7 @@ public class LoginAPI extends BaseAPI {
                 .extract().response();
         JsonPath jsonPath = new JsonPath(response.asString());
         String token = jsonPath.getString("token");
-        System.out.println("generated token is -->" + token);
+        logger.info("generated token is -->" + token);
         TokenManager.setToken(token);
     }
 

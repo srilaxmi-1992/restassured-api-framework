@@ -1,9 +1,5 @@
 package utils;
 
-import base.LoginAPI;
-
-import java.util.List;
-
 public class TokenManager {
     // ThreadLocal to hold token per thread
     private static ThreadLocal<String> token = new ThreadLocal<>();

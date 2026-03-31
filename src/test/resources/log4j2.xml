@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+    <Appenders>
+        <!-- Console Appender -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %c - %msg%n"/>
+        </Console>
+
+        <!-- Suite Log Appender -->
+        <File name="SuiteLog" fileName="logs/suite.log">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %c - %msg%n</Pattern>
+            </PatternLayout>
+        </File>
+
+        <!-- Per-Test Rolling File Appender -->
+        <Routing name="Routing">
+            <Routes pattern="${ctx:testName}">
+                <Route>
+                    <RollingFile name="TestFile-${ctx:testName}"
+                                 fileName="logs/${ctx:testName}.log"
+                                 filePattern="logs/${ctx:testName}-%d{yyyy-MM-dd-HH-mm}-%i.log.gz"
+                                 append="true">
+                        <PatternLayout>
+                            <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %c{1} - %msg%n</Pattern>
+                        </PatternLayout>
+                        <Policies>
+                            <SizeBasedTriggeringPolicy size="10 MB"/>
+                        </Policies>
+                    </RollingFile>
+                </Route>
+            </Routes>
+        </Routing>
+
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="SuiteLog"/>
+            <AppenderRef ref="Routing"/>
+        </Root>
+    </Loggers>
+
+</Configuration>

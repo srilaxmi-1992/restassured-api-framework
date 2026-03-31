@@ -1,5 +1,8 @@
 package listeners;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 import org.testng.ISuite;
 import org.testng.ISuiteListener;
 import org.testng.ITestListener;
@@ -7,38 +10,52 @@ import org.testng.ITestResult;
 
 public class TestListener implements ITestListener, ISuiteListener {
 
+    private final Logger suiteLogger = LogManager.getLogger("SuiteLog");
+
     private int passed = 0, failed = 0, skipped = 0;
-    // methods executes once when Testsuite starts
+
+    @Override
     public void onStart(ISuite suite) {
-        System.out.println("\n===== SUITE: " + suite.getName() + " =====");
+        ThreadContext.put("testName", "suite-startup");  // Prevent null path on suite start
+        suiteLogger.info("\n===== SUITE: " + suite.getName() + " =====");
     }
 
+    @Override
     public void onFinish(ISuite suite) {
-        System.out.println("\n===== FINAL SUMMARY =====");
-        System.out.println("  Passed : " + passed);
-        System.out.println("  Failed : " + failed);
-        System.out.println("  Skipped: " + skipped);
-        System.out.println("=========================\n");
+        ThreadContext.put("testName", "suite-startup");  // Restore for suite summary logging
+        suiteLogger.info("\n===== FINAL SUMMARY =====");
+        suiteLogger.info("  Passed : " + passed);
+        suiteLogger.info("  Failed : " + failed);
+        suiteLogger.info("  Skipped: " + skipped);
+        suiteLogger.info("=========================\n");
+        ThreadContext.clearAll();  // Clean up after suite finishes
     }
 
-    // Methods override in ITestListener
-    // Executes for every test method
+    @Override
     public void onTestStart(ITestResult result) {
-        System.out.println("START TEST : " + result.getName());
+        // Only log to suite — @BeforeMethod in test class sets ThreadContext with timestamp
+        suiteLogger.info("START TEST : " + result.getName());
     }
 
+    @Override
     public void onTestSuccess(ITestResult result) {
         passed++;
-        System.out.println("TEST SUCCESS : " + result.getName());
+        // ThreadContext is still valid here — @AfterMethod clears it after this
+        Logger testLogger = LogManager.getLogger(result.getTestClass().getRealClass());
+        testLogger.info("TEST SUCCESS : " + result.getName());
     }
 
+    @Override
     public void onTestFailure(ITestResult result) {
         failed++;
-        System.out.println("TEST FAIL : " + result.getName());
+        Logger testLogger = LogManager.getLogger(result.getTestClass().getRealClass());
+        testLogger.error("TEST FAIL : " + result.getName());
     }
 
+    @Override
     public void onTestSkipped(ITestResult result) {
         skipped++;
-        System.out.println("TEST SKIPPED : " + result.getName());
+        Logger testLogger = LogManager.getLogger(result.getTestClass().getRealClass());
+        testLogger.warn("TEST SKIPPED : " + result.getName());
     }
 }

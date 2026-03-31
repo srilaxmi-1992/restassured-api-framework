@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import models.Booking;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -15,15 +18,28 @@ import services.BookingService;
 import utils.TestDataLoader;
 import utils.TokenManager;
 
+import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
 public class BookingAPITest extends LoginAPI {
 
+    Logger logger = LogManager.getLogger(BookingAPITest.class);
+
     @BeforeMethod(alwaysRun = true)
-    public void loginBeforeTest() {
-        LoginAPI.generateToken(); // token for current thread
+    public void loginBeforeTest(Method method) {
+        // Generate Token
+        // Timestamp safe for Windows
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
+        String testLogName = method.getName() + "-" + timestamp;
+        ThreadContext.put("testName", testLogName);
+        LoginAPI.generateToken();
+
     }
 
     @DataProvider(name = "getBookings")
@@ -96,13 +112,13 @@ public class BookingAPITest extends LoginAPI {
     public void validateUpdateBookingIdDetails() throws Exception {
         Booking booking = TestDataLoader.getInput("TC_004");
         Response createResponse = BookingService.createBooking(booking);
-        System.out.println("Create Booking API Response -> " + createResponse.asString());
+        logger.info("Create Booking API Response -> " + createResponse.asString());
         int bookingId = createResponse.jsonPath().getInt("bookingid");
 
         Booking updateBooking = TestDataLoader.getUpdatedInput("TC_004");
         // Step 2: Update booking
         Response updateResponse = BookingService.updateBooking(bookingId, updateBooking);
-        System.out.println("Update Booking API Response -> " + updateResponse.asString());
+        logger.info("Update Booking API Response -> " + updateResponse.asString());
 
 
         // Step 3: Validations
@@ -119,12 +135,12 @@ public class BookingAPITest extends LoginAPI {
 
         Booking booking = TestDataLoader.getInput("TC_005");
         Response createResponse = BookingService.createBooking(booking);
-        System.out.println("Create Booking API Response -> " + createResponse.body().asString());
+        logger.info("Create Booking API Response -> " + createResponse.body().asString());
         int bookingId = createResponse.jsonPath().getInt("bookingid");
 
         // Step 2: delete booking
         Response deleteResponse = BookingService.deleteBooking(bookingId);
-        System.out.println("Delete Booking API Response -> " + deleteResponse.asString());
+        logger.info("Delete Booking API Response -> " + deleteResponse.asString());
 
         // Step 3: Validations
         JsonNode expected = TestDataLoader.getExpected("TC_005");
@@ -136,5 +152,6 @@ public class BookingAPITest extends LoginAPI {
     @AfterMethod(alwaysRun = true)
     public void cleanup() {
         TokenManager.clearToken();
+        ThreadContext.clearAll();
     }
 }
