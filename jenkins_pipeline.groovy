@@ -10,6 +10,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                cleanWs()
                 git branch: 'main',
                         url: 'https://github.com/srilaxmi-1992/restassured-api-framework.git'
             }
