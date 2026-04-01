@@ -11,12 +11,12 @@ import org.testng.ITestResult;
 public class TestListener implements ITestListener, ISuiteListener {
 
     private final Logger suiteLogger = LogManager.getLogger("SuiteLog");
-
     private int passed = 0, failed = 0, skipped = 0;
 
     @Override
     public void onStart(ISuite suite) {
         ThreadContext.put("testName", "suite-startup");  // Prevent null path on suite start
+        ThreadContext.put("threadId", "0");
         suiteLogger.info("\n===== SUITE: " + suite.getName() + " =====");
     }
 
@@ -34,6 +34,9 @@ public class TestListener implements ITestListener, ISuiteListener {
     @Override
     public void onTestStart(ITestResult result) {
         // Only log to suite — @BeforeMethod in test class sets ThreadContext with timestamp
+        suiteLogger.info("Thread-{} Starting: {}",
+                Thread.currentThread().getId(),
+                result.getName());
         suiteLogger.info("START TEST : " + result.getName());
     }
 
@@ -42,7 +45,7 @@ public class TestListener implements ITestListener, ISuiteListener {
         passed++;
         // ThreadContext is still valid here — @AfterMethod clears it after this
         Logger testLogger = LogManager.getLogger(result.getTestClass().getRealClass());
-        testLogger.info("TEST SUCCESS : " + result.getName());
+        testLogger.info("TEST SUCCESS : " + Thread.currentThread().getName() + " : " + result.getName());
     }
 
     @Override

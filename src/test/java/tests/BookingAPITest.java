@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
 import org.testng.Assert;
+import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -19,30 +20,32 @@ import utils.TestDataLoader;
 import utils.TokenManager;
 
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
 public class BookingAPITest extends LoginAPI {
 
-    Logger logger = LogManager.getLogger(BookingAPITest.class);
+    private final Logger logger = LogManager.getLogger(BookingAPITest.class);
 
     @BeforeMethod(alwaysRun = true)
-    public void loginBeforeTest(Method method) {
+    public void loginBeforeTest(ITestResult result) {
         // Generate Token
         // Timestamp safe for Windows
+        ThreadContext.clearAll();
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
-        String testLogName = method.getName() + "-" + timestamp;
+        String testLogName = result.getMethod().getMethodName();
         ThreadContext.put("testName", testLogName);
+        ThreadContext.put("threadId", String.valueOf(Thread.currentThread().getId())+ "-" + timestamp);
+        System.out.println("CTX: " + ThreadContext.get("testName"));
+        System.out.println("CTX threadId: " + ThreadContext.get("threadId"));
         LoginAPI.generateToken();
 
     }
 
-    @DataProvider(name = "getBookings")
+    @DataProvider(name = "getBookings", parallel = true)
     public Object[][] getTestData() throws Exception {
 
         List<Booking> bookings = TestDataLoader.getDataDrivenInput("TC_001");

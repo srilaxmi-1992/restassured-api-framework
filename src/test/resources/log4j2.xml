@@ -16,15 +16,13 @@
 
         <!-- Per-Test Rolling File Appender -->
         <Routing name="Routing">
-            <Routes pattern="${ctx:testName}">
+            <Routes pattern="$${ctx:testName}-$${ctx:threadId}">
                 <Route>
-                    <RollingFile name="TestFile-${ctx:testName}"
-                                 fileName="logs/${ctx:testName}.log"
-                                 filePattern="logs/${ctx:testName}-%d{yyyy-MM-dd-HH-mm}-%i.log.gz"
-                                 append="true">
-                        <PatternLayout>
-                            <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %c{1} - %msg%n</Pattern>
-                        </PatternLayout>
+                    <RollingFile name="TestFile-${ctx:testName}-${ctx:threadId}"
+                                 fileName="logs/${ctx:testName}-${ctx:threadId}.log"
+                                 filePattern="logs/${ctx:testName}-${ctx:threadId}-%i.log"
+                                 createOnDemand="true">
+                        <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %c{1} - %msg%n"/>
                         <Policies>
                             <SizeBasedTriggeringPolicy size="10 MB"/>
                         </Policies>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="Rest API Automation Framework Regression Suite" verbose="1" parallel="false">
+<suite name="Rest API Automation Framework Regression Suite" verbose="2" parallel="methods" thread-count="3" >
     <listeners>
         <listener class-name="listeners.TestListener"/>
         <listener class-name="listeners.RetryListener"/>
@@ -14,6 +14,7 @@
         </groups>
         <classes>
             <class name="tests.BookingAPITest"/>
+            <class name="tests.CountriesGraphQLAPITest"/>
         </classes>
     </test>
 </suite>
