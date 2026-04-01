@@ -1,0 +1,7 @@
+query GetCountry {
+    country(code: "US") {
+        name
+        capital
+        currency
+    }
+}
