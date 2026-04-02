@@ -1,5 +1,10 @@
 pipeline {
     agent any
+
+    tools {
+        allure 'allure'   // adding allure tool name created in jenkins
+    }
+
     parameters {
         choice(
                 name: 'SUITE',
@@ -7,6 +12,7 @@ pipeline {
                 description: 'Select TestNG suite to run'
         )
     }
+
     stages {
         stage('Checkout') {
             steps {
@@ -15,15 +21,16 @@ pipeline {
                         url: 'https://github.com/srilaxmi-1992/restassured-api-framework.git'
             }
         }
+
         stage('Build') {
             steps {
                 bat 'mvn clean install -DskipTests'
             }
         }
+
         stage('Test') {
             steps {
                 script {
-                    // Map Jenkins choice → TestNG suite file
                     def suiteMap = [
                             smoke: 'testng-smoke',
                             regression: 'testng-regression',
@@ -35,16 +42,35 @@ pipeline {
                 }
             }
         }
+
         stage('Publish Reports') {
             steps {
+                // for testng report
                 junit '**/target/surefire-reports/*.xml'
             }
         }
+
         stage('Archive Artifacts') {
             steps {
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
     }
-}
 
+    // report after the pipeline finished
+    post {
+        always {
+            allure([
+                    includeProperties: false,
+                    jdk: '',
+                    results: [[path: 'target/allure-results']]
+            ])
+        }
+        success {
+            echo '✅ Tests PASSED'
+        }
+        failure {
+            echo '❌ Tests FAILED — check Allure report'
+        }
+    }
+}
