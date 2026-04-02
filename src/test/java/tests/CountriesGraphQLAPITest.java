@@ -1,6 +1,7 @@
 package tests;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +24,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+@Epic("GraphQL API")
+@Feature("Countries and Continents")
 public class CountriesGraphQLAPITest {
 
     static String url = "";
@@ -46,6 +49,9 @@ public class CountriesGraphQLAPITest {
         ThreadContext.put("threadId", String.valueOf(Thread.currentThread().getId())+ "-" + timestamp);
     }
 
+    @Story("Continents")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Get All Continents")
     @Test(groups = {"smoke"}, priority = 1)
     public void getAllContinents() throws IOException {
         String query = TestDataLoader.buildGraphQLRequestBody("getContinents");
@@ -67,6 +73,9 @@ public class CountriesGraphQLAPITest {
         Assert.assertEquals(actualContinents, expectedContinents);
     }
 
+    @Story("Countries")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Get Country by Code")
     @Test(groups = {"smoke", "regression"}, priority = 2)
     public void getCountryByCode() throws IOException {
 

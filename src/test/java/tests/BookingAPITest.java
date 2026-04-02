@@ -2,6 +2,7 @@ package tests;
 
 import base.LoginAPI;
 import com.fasterxml.jackson.databind.JsonNode;
+import io.qameta.allure.*;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import models.Booking;
@@ -19,13 +20,14 @@ import services.BookingService;
 import utils.TestDataLoader;
 import utils.TokenManager;
 
-import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
+@Epic("RestBooker API")
+@Feature("Booking API")
 public class BookingAPITest extends LoginAPI {
 
     private final Logger logger = LogManager.getLogger(BookingAPITest.class);
@@ -61,6 +63,9 @@ public class BookingAPITest extends LoginAPI {
         return data;
     }
 
+    @Story("Create Booking")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Verify that a booking creating successfully")
     @Test(description = "Create a booking with valid data", priority = 1, groups = {"smoke"}, dataProvider = "getBookings")
     public void validateSuccessfulBookingCreation(Booking booking, JsonNode expected) throws Exception {
 
@@ -76,6 +81,9 @@ public class BookingAPITest extends LoginAPI {
 
     }
 
+    @Story("Create Booking")
+    @Severity(SeverityLevel.MINOR)
+    @Description("Verify that status code is 500 with missing payload details")
     @Test(description = "Validate 500 is thrown when firstname is missed", priority = 2, groups = {"regression"})
     public void validateMissingPayloadDetails() throws Exception {
         Booking booking = TestDataLoader.getInput("TC_002");
@@ -91,6 +99,9 @@ public class BookingAPITest extends LoginAPI {
 
     }
 
+    @Story("Get Booking")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Verify get booking details successfully")
     @Test(description = "Validate Get Booking details with valid booking Id created", priority = 3, groups = {"regression", "smoke"})
     public void validateGetBookingIdDetails() throws Exception {
         Booking booking = TestDataLoader.getInput("TC_003");
@@ -111,6 +122,9 @@ public class BookingAPITest extends LoginAPI {
 
     }
 
+    @Story("Update Booking")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify that a booking updating successfully")
     @Test(description = "Valid update with all fields", priority = 4, groups = {"regression"})
     public void validateUpdateBookingIdDetails() throws Exception {
         Booking booking = TestDataLoader.getInput("TC_004");
@@ -133,6 +147,9 @@ public class BookingAPITest extends LoginAPI {
 
     }
 
+    @Story("Delete Booking")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Verify that a booking deleted successfully")
     @Test(description = "Valid Delete booking", priority = 5, groups = {"regression"})
     public void validateDeleteBookingIdDetails() throws Exception {
 
