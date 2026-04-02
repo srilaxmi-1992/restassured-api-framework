@@ -66,14 +66,14 @@ This project is fully integrated with Jenkins Pipeline, enabling automated:
 ✔️ Prerequisites in Jenkins
 Before running the pipeline:
 
-Install Allure Jenkins Plugin
-Manage Jenkins → Manage Plugins → Available → search Allure Jenkins Plugin
-Configure Allure Tool
-Manage Jenkins → Global Tool Configuration
-Add Allure Commandline
-Name it: allure
-Jenkins will use this tool in the pipeline
-Create Jenkins pipeline with jenkins_pipeline.groovy script.
+1. Install Allure Jenkins Plugin
+2. Manage Jenkins → Manage Plugins → Available → search Allure Jenkins Plugin
+3. Configure Allure Tool
+4. Manage Jenkins → Global Tool Configuration
+5. Add Allure Commandline
+6. Name it: allure
+7. Jenkins will use this tool in the pipeline
+8. Create Jenkins pipeline with jenkins_pipeline.groovy script.
 
 ## 👩‍💻 Author
 
